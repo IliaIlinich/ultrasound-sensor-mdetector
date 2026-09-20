@@ -1,0 +1,22 @@
+[Unit]
+Description=Ultrasound motion detector on %i
+After=dev-%i.device
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/mdetector \
+    --port /dev/%i \
+    --baud 115200 \
+    --slave 1 \
+    --interval 100 \
+    --average 5 \
+    --jitter 50 \
+    --distance 350 \
+    --flag /var/run/motion-%i.flg \
+    --unflag /var/run/no-motion-%i.flg \
+    --dump /dev/shm/mdetector-%i.txt
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target
